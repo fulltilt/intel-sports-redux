@@ -96,19 +96,18 @@ class Home extends Component {
             <List>
               {routes.map((route, index) => {
                 return (
-                  <ListItem button key={index}>
-                    <Link
-                      to={route.path}
-                      style={{ textDecoration: "none" }}
-                      onClick={() => this.setState({ title: route.title })}
-                    >
-                      <ListItemText primary={route.title} />
-                    </Link>
+                  <ListItem
+                    button
+                    key={index}
+                    component={Link}
+                    to={route.path}
+                    onClick={() => this.setState({ title: route.title })}
+                  >
+                    <ListItemText primary={route.title} />
                   </ListItem>
                 );
               })}
             </List>
-            <Divider />
           </Drawer>
           <main className={classes.content}>
             <div className={classes.toolbar} />
