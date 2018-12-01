@@ -1,10 +1,12 @@
+//ACTION CREATORS
 import axios from "axios";
 import {
   FETCH_EVENTS,
   FETCH_EVENT,
   SAVE_EVENT,
-  UPDATE_TITLE
-} from "actions/types";
+  UPDATE_TITLE,
+  GET_TITLE
+} from "./types";
 
 export function saveEvent(event) {
   return {
@@ -34,7 +36,13 @@ export function fetchEvent(id) {
   };
 }
 
-export function updateTitle(title) {
+export function getTitle() {
+  return {
+    type: GET_TITLE
+  };
+}
+
+export function setTitle(title) {
   return {
     type: UPDATE_TITLE,
     payload: title

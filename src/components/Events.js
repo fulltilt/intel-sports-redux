@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -11,6 +12,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TablePaginationActionsWrapped from "./ui/TablePaginationActionsWrapped";
 import { getEvents } from "../apis";
+import * as actions from "../actions";
 
 const styles = theme => ({
   root: {
@@ -60,6 +62,7 @@ class Events extends Component {
   };
 
   rowClicked = (evt, eventId) => {
+    this.props.setTitle(`${this.props.title} - ${eventId}`);
     this.context.router.history.push(`/event/${eventId}`);
   };
 
@@ -137,4 +140,13 @@ class Events extends Component {
   }
 }
 
-export default withStyles(styles)(Events);
+function mapStateToProps(state) {
+  return { title: state.events.title };
+}
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    actions
+  )(Events)
+);

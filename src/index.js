@@ -8,7 +8,11 @@ import reduxPromise from "redux-promise";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 
-const initialState = {};
+const initialState = {
+  events: {
+    title: "NBA Events"
+  }
+};
 
 const store = createStore(
   reducers,

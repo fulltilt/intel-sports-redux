@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import {
   BrowserRouter as Router,
@@ -18,6 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Events from "./Events";
 import Event from "./Event";
+import * as actions from "../actions";
 
 const drawerWidth = 240;
 
@@ -46,13 +48,13 @@ const styles = theme => ({
 
 const routes = [
   {
-    title: "NBA",
+    title: "NBA Events",
     league: "nba",
     path: "/events/nba",
     main: Events
   },
   {
-    title: "NFL",
+    title: "NFL Events",
     league: "nfl",
     path: "/events/nfl",
     main: Events
@@ -60,13 +62,8 @@ const routes = [
 ];
 
 class Home extends Component {
-  state = {
-    title: ""
-  };
-
   render() {
-    const { classes } = this.props;
-    const { title } = this.state;
+    const { classes, title } = this.props;
     return (
       <Router>
         <div className={classes.root}>
@@ -79,7 +76,7 @@ class Home extends Component {
                 noWrap
                 style={{ margin: "0 auto" }}
               >
-                {`${title} Events`}
+                {`${title}`}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -101,7 +98,7 @@ class Home extends Component {
                     key={index}
                     component={Link}
                     to={route.path}
-                    onClick={() => this.setState({ title: route.title })}
+                    onClick={() => this.props.setTitle(route.title)}
                   >
                     <ListItemText primary={route.title} />
                   </ListItem>
@@ -135,4 +132,13 @@ class Home extends Component {
   }
 }
 
-export default withStyles(styles)(Home);
+function mapStateToProps(state) {
+  return { title: state.events.title };
+}
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    actions
+  )(Home)
+);

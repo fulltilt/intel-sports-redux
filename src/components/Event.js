@@ -129,7 +129,6 @@ class Event extends React.Component {
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <h2 className="row justify-content-md-center">Event {eventId}</h2>
               <Table className={classes.table}>
                 <TableHead>
                   <TableRow>
