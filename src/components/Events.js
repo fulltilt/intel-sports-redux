@@ -11,7 +11,6 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TablePaginationActionsWrapped from "./ui/TablePaginationActionsWrapped";
-import { getEvents } from "../apis";
 import * as actions from "../actions";
 
 const styles = theme => ({
@@ -43,14 +42,13 @@ class Events extends Component {
 
     this.state = {
       league: props.league,
-      rows: [],
       page: 0,
       rowsPerPage: 20
     };
   }
 
   componentDidMount() {
-    getEvents(this.state.league).then(rows => this.setState({ rows }));
+    this.props.fetchEvents(this.state.league);
   }
 
   handleChangePage = (event, page) => {
@@ -67,10 +65,10 @@ class Events extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { rows, rowsPerPage, page } = this.state;
+    const { classes, events } = this.props;
+    const { rowsPerPage, page } = this.state;
     const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+      rowsPerPage - Math.min(rowsPerPage, events.length - page * rowsPerPage);
 
     return (
       <Paper className={classes.root}>
@@ -89,7 +87,7 @@ class Events extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
+              {events
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => {
                   return (
@@ -124,7 +122,7 @@ class Events extends Component {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   colSpan={3}
-                  count={rows.length}
+                  count={events.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onChangePage={this.handleChangePage}
@@ -141,7 +139,7 @@ class Events extends Component {
 }
 
 function mapStateToProps(state) {
-  return { title: state.events.title };
+  return { title: state.events.title, events: state.events.events };
 }
 
 export default withStyles(styles)(

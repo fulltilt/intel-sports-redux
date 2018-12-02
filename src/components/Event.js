@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -12,9 +14,10 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TablePaginationActionsWrapped from "./ui/TablePaginationActionsWrapped";
 import Button from "@material-ui/core/Button";
+
 import AddContentDialog from "./ui/AddContentDialog";
 import Toastr from "./ui/Toastr";
-import { getEvent, submitContent } from "../apis";
+import * as actions from "../actions";
 
 const styles = theme => ({
   root: {
@@ -59,9 +62,7 @@ class Event extends React.Component {
   }
 
   componentDidMount() {
-    getEvent(this.state.id).then(evt =>
-      this.setState({ rows: evt.eventClips, eventId: evt.eventId })
-    );
+    this.props.fetchEvent(this.state.id);
   }
 
   handleChangePage = (event, page) => {
@@ -91,30 +92,31 @@ class Event extends React.Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    submitContent(this.state)
-      .then(res => {
-        console.log(res);
-        this.setState({
-          message: res.message,
-          dialogOpen: false,
-          snackbarOpen: true
-        });
-      })
-      .catch(err => {
-        this.setState({
-          message: err,
-          dialogOpen: false,
-          snackbarOpen: true,
-          snackbarError: true
-        });
-      });
+    console.log("submitContent needs to be implemented in Redux way");
+    // submitContent(this.state)
+    //   .then(res => {
+    //     console.log(res);
+    //     this.setState({
+    //       message: res.message,
+    //       dialogOpen: false,
+    //       snackbarOpen: true
+    //     });
+    //   })
+    //   .catch(err => {
+    //     this.setState({
+    //       message: err,
+    //       dialogOpen: false,
+    //       snackbarOpen: true,
+    //       snackbarError: true
+    //     });
+    //   });
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, currentEvent } = this.props;
+    if (!currentEvent) return null;
+
     let {
-      rows,
-      eventId,
       rowsPerPage,
       page,
       dialogOpen,
@@ -122,6 +124,8 @@ class Event extends React.Component {
       snackbarOpen,
       snackbarError
     } = this.state;
+
+    const rows = currentEvent.eventClips;
     const emptyRows =
       rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     return (
@@ -186,7 +190,13 @@ class Event extends React.Component {
               NEW
             </Button>
             <Button variant="contained" className={classes.button}>
-              <Link to="/" style={{ textDecoration: "none" }}>
+              <Link
+                to="/"
+                style={{ textDecoration: "none" }}
+                onClick={() =>
+                  this.props.setTitle(this.props.title.split(" ")[0])
+                }
+              >
                 Back
               </Link>
             </Button>
@@ -209,4 +219,16 @@ class Event extends React.Component {
   }
 }
 
-export default withStyles(styles)(Event);
+function mapStateToProps(state) {
+  return {
+    title: state.events.title,
+    currentEvent: state.events.currentEvent
+  };
+}
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    actions
+  )(Event)
+);

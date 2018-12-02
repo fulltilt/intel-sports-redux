@@ -10,7 +10,9 @@ import * as serviceWorker from "./serviceWorker";
 
 const initialState = {
   events: {
-    title: "NBA Events"
+    title: "NBA Events",
+    events: [],
+    currentEvent: null
   }
 };
 

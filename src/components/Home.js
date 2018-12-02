@@ -46,18 +46,16 @@ const styles = theme => ({
   }
 });
 
-const routes = [
+const sidebarRoutes = [
   {
-    title: "NBA Events",
+    title: "NBA",
     league: "nba",
-    path: "/events/nba",
-    main: Events
+    path: "/events/nba"
   },
   {
-    title: "NFL Events",
+    title: "NFL",
     league: "nfl",
-    path: "/events/nfl",
-    main: Events
+    path: "/events/nfl"
   }
 ];
 
@@ -76,7 +74,7 @@ class Home extends Component {
                 noWrap
                 style={{ margin: "0 auto" }}
               >
-                {`${title}`}
+                {title}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -91,14 +89,14 @@ class Home extends Component {
             <div className={classes.toolbar} />
             <Divider />
             <List>
-              {routes.map((route, index) => {
+              {sidebarRoutes.map((route, index) => {
                 return (
                   <ListItem
                     button
                     key={index}
                     component={Link}
                     to={route.path}
-                    onClick={() => this.props.setTitle(route.title)}
+                    onClick={() => this.props.setTitle(`${route.title} Events`)}
                   >
                     <ListItemText primary={route.title} />
                   </ListItem>
@@ -109,7 +107,7 @@ class Home extends Component {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
-              {routes.map((route, index) => {
+              {sidebarRoutes.map((route, index) => {
                 return (
                   // Render more <Route>s with the same paths as
                   // above, but different components this time.
